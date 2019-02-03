@@ -1,8 +1,9 @@
-package org.example.ws;
+package org.sterling.ws;
 
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Matt Warman
  */
 @WebAppConfiguration
+@TestPropertySource(locations="classpath:/config/servicetest.properties")
 public abstract class AbstractControllerTest extends AbstractTest {
 
     protected MockMvc mvc;

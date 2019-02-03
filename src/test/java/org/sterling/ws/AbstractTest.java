@@ -1,11 +1,11 @@
-package org.example.ws;
+package org.sterling.ws;
 
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.sterling.ws.Application;
 
 /**
  * The AbstractTest class is the parent of all JUnit test classes. This class
@@ -16,11 +16,12 @@ import org.sterling.ws.Application;
 @RunWith(SpringRunner.class)
 @SpringBootTest(
         classes = Application.class)
+@TestPropertySource(locations="classpath:/config/servicetest.properties")
 public abstract class AbstractTest {
 
     /**
      * The Logger instance for all classes in the unit test framework.
      */
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    
 }
