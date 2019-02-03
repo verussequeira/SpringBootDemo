@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  *
  * @author Matt Warman
  */
-@ComponentScan({"org.example","org.sterling","com.sterling"})
+@ComponentScan({"org.sterling","com.sterling"})
 @Configuration
 @SpringBootApplication
 //@EnableTransactionManagement

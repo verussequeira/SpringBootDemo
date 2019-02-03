@@ -37,28 +37,14 @@ public class SterlingServiceBean implements SterlingService{
      * The RestTemplate used to retrieve data from the remote Quote API.
      */
     private RestTemplate restTemplate;
-    
+       
     
   	@Override
 	public OrderXSDType getOrderDetails(String orderHeaderKey) {
 		
 		
-		ObjectMapper mapper = new ObjectMapper();
-	    mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-	    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		
-	    List messageConverters = new ArrayList();
-	    messageConverters.add(new FormHttpMessageConverter());
-	    messageConverters.add(new StringHttpMessageConverter());
-	
-		restTemplate = new RestTemplate();
-		MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-		mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_XML));
-		mappingJackson2HttpMessageConverter.setObjectMapper(mapper);
-		messageConverters.add(mappingJackson2HttpMessageConverter);
-	    restTemplate.setMessageConverters(messageConverters);
-	    
-	    
+		  
+  		restTemplate = SterlingServiceUtil.restemplateBuilder();
 	    
 		//restTemplate.getMessageConverters().add(mappingJackson2HttpMessageConverter);
 		
