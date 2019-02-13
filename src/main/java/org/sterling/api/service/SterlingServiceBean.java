@@ -1,23 +1,16 @@
 package org.sterling.api.service;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.FormHttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.sterling.api.exception.impl.RestTemplateResponseErrorHandler;
+import org.sterling.api.exception.impl.beans.NotFoundException;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sterlingcommerce.documentation.yfs.getorderdetails.output.OrderXSDType;
 import com.sterlingcommerce.documentation.yfs.getorderdetails.output.OrderXSDType.OrderLines.OrderLine;
 
@@ -37,28 +30,38 @@ public class SterlingServiceBean implements SterlingService{
      * The RestTemplate used to retrieve data from the remote Quote API.
      */
     private RestTemplate restTemplate;
+    
+    
+    @Autowired
+    public SterlingServiceBean(RestTemplateBuilder restTemplateBuilder) {
+           restTemplate = restTemplateBuilder
+          .errorHandler(new RestTemplateResponseErrorHandler())
+          .build();
+    }
        
     
   	@Override
 	public OrderXSDType getOrderDetails(String orderHeaderKey) {
 		
 		
-		  
-  		restTemplate = SterlingServiceUtil.restemplateBuilder();
-	    
+  		OrderXSDType orderXSDType = null;
+  		restTemplate = SterlingServiceUtil.restemplateBuilder(restTemplate);
+  		  		
 		//restTemplate.getMessageConverters().add(mappingJackson2HttpMessageConverter);
 		
 		 logger.info("< getOrderDetails");
-		 
-		 logger.info("----->: "+this.restTemplate.getForObject(
-	                "http://domsrvaqa/smcfs/restapi/order/detail?OrderHeaderKey={orderHeaderKey}",
-	                String.class, orderHeaderKey));
-		 
-				 
-		 OrderXSDType orderXSDType = this.restTemplate.getForObject(
+			 
+		 try
+		 {
+		 orderXSDType = this.restTemplate.getForObject(
 	                "http://domsrvaqa/smcfs/restapi/order/detail?OrderHeaderKey={orderHeaderKey}",
 	                OrderXSDType.class, orderHeaderKey);
-		 
+		 }
+		 catch(Exception notFoundException)
+		 {
+			 //logger.error(notFoundException.getPropertiesMap().get("code"));
+			 throw notFoundException;
+		 }
 		
 		 if(orderXSDType != null)
 		 {

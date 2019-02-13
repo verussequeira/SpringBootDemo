@@ -1,4 +1,4 @@
-package org.sterling.ws.web;
+package org.sterling.api.exception.impl;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.RequestAttributes;
 
@@ -42,11 +41,11 @@ public class DefaultExceptionAttributes implements ExceptionAttributes {
     /**
      * The status attribute key.
      */
-    public static final String STATUS = "status";
+    public static final String STATUS = "statuses";
     /**
      * The error attribute key.
      */
-    public static final String ERROR = "error";
+    public static final String ERROR = "errors";
     /**
      * The exception attribute key.
      */
@@ -107,5 +106,20 @@ public class DefaultExceptionAttributes implements ExceptionAttributes {
             HttpServletRequest httpRequest) {
         exceptionAttributes.put(PATH, httpRequest.getServletPath());
     }
+
+	@Override
+	public Map<String, Object> getExceptionAttributes(Exception exception, Map<String, Object> map,
+			HttpServletRequest httpRequest, HttpStatus httpStatus) {
+		
+		
+		Map<String, Object> exceptionAttributes = new LinkedHashMap<String, Object>();
+		exceptionAttributes.put(TIMESTAMP, new Date());
+		exceptionAttributes.put(STATUS, httpStatus.value());
+	    exceptionAttributes.put(ERROR, httpStatus.getReasonPhrase());
+	    exceptionAttributes.put(EXCEPTION, exception.getClass().getName());
+        exceptionAttributes.put(MESSAGE, map.get("errorDescription"));
+		 
+		return exceptionAttributes;
+	}
 
 }

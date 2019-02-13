@@ -1,17 +1,19 @@
-package org.sterlng.ws.web.api;
+package org.sterling.api.exception.impl;
 
 import java.util.Map;
 
-//import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.sterling.ws.web.DefaultExceptionAttributes;
-import org.sterling.ws.web.ExceptionAttributes;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.sterling.api.exception.impl.beans.NotFoundException;
 
 /**
  * The BaseController class implements common functionality for all Controller
@@ -21,12 +23,19 @@ import org.sterling.ws.web.ExceptionAttributes;
  * 
  * @author Matt Warman
  */
-public class BaseController {
+
+
+@ControllerAdvice
+public class BaseControllerAdviceExceptionHandler extends ResponseEntityExceptionHandler{
 
     /**
      * The Logger for this class.
      */
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    
+    
+    @Autowired
+    private MessageSource messageSource;
 
   /*  *//**
      * Handles JPA NoResultExceptions thrown from web service controller
@@ -67,22 +76,26 @@ public class BaseController {
      * @return A ResponseEntity containing the Exception Attributes in the body
      *         and a HTTP status code 500.
      */
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleException(
-            Exception exception, HttpServletRequest request) {
+    		NotFoundException exception, HttpServletRequest request) {
 
         logger.error("> handleException");
         logger.error("- Exception: ", exception);
 
         ExceptionAttributes exceptionAttributes = new DefaultExceptionAttributes();
-
+        logger.error(" - map: " +exception.getMapException().toString());
         Map<String, Object> responseBody = exceptionAttributes
-                .getExceptionAttributes(exception, request,
-                        HttpStatus.INTERNAL_SERVER_ERROR);
+                .getExceptionAttributes(exception, exception.getMapException(), request,
+                        HttpStatus.NOT_FOUND);
 
         logger.error("< handleException");
         return new ResponseEntity<Map<String, Object>>(responseBody,
-                HttpStatus.INTERNAL_SERVER_ERROR);
+                HttpStatus.NOT_FOUND);
     }
-
+    
+    
+   
+    
+    
 }

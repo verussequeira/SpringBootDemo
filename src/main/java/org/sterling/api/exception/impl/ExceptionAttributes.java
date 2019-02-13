@@ -1,4 +1,4 @@
-package org.sterling.ws.web;
+package org.sterling.api.exception.impl;
 
 import java.util.Map;
 
@@ -33,6 +33,9 @@ public interface ExceptionAttributes {
      * @return A Map of exception attributes.
      */
     Map<String, Object> getExceptionAttributes(Exception exception,
+            HttpServletRequest httpRequest, HttpStatus httpStatus);
+    
+    Map<String, Object> getExceptionAttributes(Exception exception,Map<String, Object> map,
             HttpServletRequest httpRequest, HttpStatus httpStatus);
 
 }

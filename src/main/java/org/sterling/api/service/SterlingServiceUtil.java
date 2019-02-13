@@ -22,7 +22,7 @@ public class SterlingServiceUtil {
     private static RestTemplate restTemplate;
     
     
-    public  static RestTemplate restemplateBuilder(){
+    public  static RestTemplate restemplateBuilder(RestTemplate restTemplate){
     	
     	
     	ObjectMapper mapper = new ObjectMapper();
@@ -33,7 +33,6 @@ public class SterlingServiceUtil {
 	    messageConverters.add(new FormHttpMessageConverter());
 	    messageConverters.add(new StringHttpMessageConverter());
 	
-		restTemplate = new RestTemplate();
 		MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
 		mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_XML));
 		mappingJackson2HttpMessageConverter.setObjectMapper(mapper);
